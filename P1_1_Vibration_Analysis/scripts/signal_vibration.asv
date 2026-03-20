@@ -14,21 +14,9 @@ t = 0 : 1/fs : T;
 
 %% STEP2 : Generate signal
 sign_normal = sin (2*pi*50*t);
-sign_harmonic = 0.5 * sin(2*pi*150*t);
+sgn_harmonic = 0.5 * sin(2*pi*150*t);
 sign_fault = 0.3 * sin(2*pi*120*t);
 noise = 0.2 * randn (size(t));
 
 %% --- STEP 3: Combine everything into one signal ---
-sign_raw = sign_normal + sign_harmonic + sign_fault + noise;
-
-%% STEP 4 Visualisation raw signal
-
-figure;
-plot(t,sign_raw);
-title('Raw Vibration Signal');
-xlabel('Time (sec)');
-ylabel('Amplitude(g)');
-grid on;
-
-
-disp(['Total samples :', num2str(length(t))]);
+sign_raw = sign_normal + signa_harmonic + signal_fault + noise;
