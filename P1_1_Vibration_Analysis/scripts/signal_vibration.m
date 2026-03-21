@@ -246,10 +246,6 @@ tolerance       = 5;       % Hz — search within ±5 Hz of target
 threshold_warn  = 0.10;    % Magnitude threshold → WARNING
 threshold_alarm = 0.20;    % Magnitude threshold → CRITICAL ALARM
 
-% 🧠 Why tolerance? 
-%    FFT doesn't give EXACTLY 120.000 Hz
-%    It gives the closest value it can find
-%    So we search in a small window: 115 to 125 Hz
 
 
 %% --- 5B: Find the magnitude at fault frequency ---
