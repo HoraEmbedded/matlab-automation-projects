@@ -151,7 +151,7 @@ disp(['   Normalized Wn   : ', num2str(Wn)]);
 N = length(sign_raw);
 
 fft_raw = fft(sign_raw);
-fft_filtered = (sign_filtered);
+fft_filtered = fft(sign_filtered);
 
 magn_raw = abs(fft_raw)/N;
 magn_filtered = abs(fft_filtered)/N;
@@ -233,3 +233,121 @@ end
 
 disp('   ─────────────────────────────────');
 disp('   Expected: peaks near 50, 120, 150 Hz');
+
+
+%% ================================================
+%  STEP 5 — Automatic Fault Detection System
+%% ================================================
+
+%% --- 5A: Define fault parameters ---
+
+fault_frequency = 120;     % Hz — the frequency we monitor
+tolerance       = 5;       % Hz — search within ±5 Hz of target
+threshold_warn  = 0.10;    % Magnitude threshold → WARNING
+threshold_alarm = 0.20;    % Magnitude threshold → CRITICAL ALARM
+
+% 🧠 Why tolerance? 
+%    FFT doesn't give EXACTLY 120.000 Hz
+%    It gives the closest value it can find
+%    So we search in a small window: 115 to 125 Hz
+
+
+%% --- 5B: Find the magnitude at fault frequency ---
+
+% Find all indices where frequency is near 120 Hz (±5 Hz)
+search_zone = (f_half >= fault_frequency - tolerance) & ...
+              (f_half <= fault_frequency + tolerance);
+
+% 🧠 search_zone is a logical array: 
+%    1 where frequency is between 115-125 Hz
+%    0 everywhere else
+
+% Extract magnitudes in that zone
+magnitudes_in_zone = magn_fil_half(search_zone);
+frequencies_in_zone = f_half(search_zone);
+
+% Find the maximum peak in that zone
+[fault_magnitude, idx] = max(magnitudes_in_zone);
+fault_freq_detected    = frequencies_in_zone(idx);
+
+% 🧠 max() returns: the maximum VALUE and its INDEX position
+
+
+%% --- 5C: Calculate fault severity ---
+
+% Compare fault magnitude to normal vibration magnitude
+% Find normal vibration magnitude at 50 Hz
+normal_zone = (f_half >= 45) & (f_half <= 55);
+normal_magnitude = max(magn_fil_half(normal_zone));
+
+% Severity = fault / normal × 100 (percentage)
+severity_percent = (fault_magnitude / normal_magnitude) * 100;
+
+% 🧠 If severity = 30% → fault is 30% as strong as normal vibration
+%    In real industry: > 25% often triggers maintenance inspection
+
+
+%% --- 5D: The Decision System ---
+
+disp(' ');
+disp('══════════════════════════════════════════');
+disp('   🏭 MACHINE HEALTH MONITORING SYSTEM   ');
+disp('══════════════════════════════════════════');
+fprintf('   Monitoring frequency : %d Hz\n', fault_frequency);
+fprintf('   Detected magnitude   : %.4f\n', fault_magnitude);
+fprintf('   Detected at          : %.1f Hz\n', fault_freq_detected);
+fprintf('   Normal vibration     : %.4f\n', normal_magnitude);
+fprintf('   Fault severity       : %.1f %%\n', severity_percent);
+disp('──────────────────────────────────────────');
+
+% Decision logic
+if fault_magnitude > threshold_alarm
+    disp('   🔴 STATUS: CRITICAL ALARM!');
+    disp('   ⚠️  ACTION: STOP MACHINE IMMEDIATELY');
+    disp('   ⚠️  SCHEDULE EMERGENCY MAINTENANCE');
+
+elseif fault_magnitude > threshold_warn
+    disp('   🟠 STATUS: WARNING — Fault Detected!');
+    disp('   ⚠️  ACTION: Schedule maintenance soon');
+    fprintf('   ⚠️  Fault at %.1f Hz exceeds warning threshold\n',...
+             fault_freq_detected);
+else
+    disp('   🟢 STATUS: OK — Normal Operation');
+    disp('   ✅ No fault detected above threshold');
+end
+
+disp('══════════════════════════════════════════');
+
+
+%% --- 5E: Visualize the detection on the spectrum ---
+
+figure;
+plot(f_half, magn_fil_half, 'r', 'LineWidth', 1.5);
+hold on;
+
+% Highlight the fault zone
+fault_zone_x = [fault_frequency-tolerance, fault_frequency+tolerance];
+fault_zone_y = [threshold_warn, threshold_warn];
+
+% Draw the threshold line
+yline(threshold_warn,  'b--', 'Warning threshold',  'LineWidth', 1.5);
+yline(threshold_alarm, 'r--', 'Critical threshold', 'LineWidth', 1.5);
+
+% Mark the detected fault peak with a red circle
+plot(fault_freq_detected, fault_magnitude, 'ro', ...
+     'MarkerSize', 12, 'LineWidth', 3);
+
+% Add text label on the fault peak
+text(fault_freq_detected + 5, fault_magnitude, ...
+     sprintf('⚠️ FAULT!\n%.1f Hz\nMag=%.3f', ...
+     fault_freq_detected, fault_magnitude), ...
+     'Color', 'red', 'FontWeight', 'bold', 'FontSize', 9);
+
+xlim([0 300]);
+title('Fault Detection System — Frequency Spectrum');
+xlabel('Frequency (Hz)');
+ylabel('Magnitude');
+legend('Filtered Spectrum', 'Warning threshold', 'Critical threshold');
+grid on;
+
+disp('✅ Step 5 complete — Fault detection system active!');
