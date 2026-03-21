@@ -130,7 +130,7 @@ grid on;
 
 
 figure;
-noise_removed = sign_raw - sign_filtered;  % What the filter took out
+noise_removed = signal_raw - signal_filtered;  % What the filter took out
 
 plot(t, noise_removed, 'Color', [0.5 0.5 0.5]);  % Gray color
 xlim([0 0.05]);
@@ -151,85 +151,4 @@ disp(['   Normalized Wn   : ', num2str(Wn)]);
 N = length(sign_raw);
 
 fft_raw = fft(sign_raw);
-fft_filtered = (sign_filtered);
-
-magn_raw = abs(fft_raw)/N;
-magn_filtered = abs(fft_filtered)/N;
-
-f = (0 : N-1)*(fs/N);
-
-half = floor(N/2);
-f_half = f(1:half);
-magn_raw_half = 2 * magn_raw(1:half);
-magn_fil_half = 2 * magn_filtered(1:half);
-
-
-figure;
-plot(f_half, magn_raw_half, 'b', 'LineWidth', 1.2);
-title('Frequency Spectrum : RAW Signal (with noise)');
-xlabel('Frequency (Hz)');
-ylabel('Magnitude');
-xlim([0 300]);               % Zoom: show only 0 to 300 Hz
-grid on;
-
-% Add vertical markers at our expected frequencies
-xline(50,  'g--', '50 Hz (normal)',   'LineWidth', 1.5);
-xline(120, 'r--', '120 Hz (FAULT!)', 'LineWidth', 2.0);
-xline(150, 'm--', '150 Hz (harmonic)','LineWidth', 1.5);
-
-
-figure;
-plot(f_half, magn_fil_half, 'r', 'LineWidth', 1.5);
-title('Frequency Spectrum — FILTERED Signal (clean)');
-xlabel('Frequency (Hz)');
-ylabel('Magnitude');
-xlim([0 300]);
-grid on;
-
-xline(50,  'g--', '50 Hz (normal)',   'LineWidth', 1.5);
-xline(120, 'r--', '120 Hz (FAULT!)', 'LineWidth', 2.0);
-xline(150, 'm--', '150 Hz (harmonic)','LineWidth', 1.5);
-
-
-figure;
-
-subplot(2,1,1);
-plot(f_half, magn_raw_half, 'b', 'LineWidth', 1.2);
-title('Spectrum BEFORE filtering — noise hides the peaks');
-xlabel('Frequency (Hz)');
-ylabel('Magnitude');
-xlim([0 300]);
-grid on;
-xline(50,'g--','LineWidth',1.5);
-xline(120,'r--','LineWidth',2.0);
-xline(150,'m--','LineWidth',1.5);
-
-subplot(2,1,2);
-plot(f_half, magn_fil_half, 'r', 'LineWidth', 1.5);
-title('Spectrum AFTER filtering — peaks are sharp and clear!');
-xlabel('Frequency (Hz)');
-ylabel('Magnitude');
-xlim([0 300]);
-grid on;
-xline(50,'g--','LineWidth',1.5);
-xline(120,'r--','LineWidth',2.0);
-xline(150,'m--','LineWidth',1.5);
-
-
-% Let MATLAB find the peaks for us
-[peaks, locations] = findpeaks(magn_fil_half, ...
-                               f_half, ...
-                               'MinPeakHeight', 0.05, ...
-                               'MinPeakDistance', 10);
-
-disp('✅ Step 4 complete — FFT Analysis done!');
-disp('   Peaks detected in filtered spectrum:');
-disp('   ─────────────────────────────────');
-
-for i = 1:length(peaks)
-    fprintf('   Peak %d : %.1f Hz  (magnitude = %.3f)\n', ...
-             i, locations(i), peaks(i));
-end
-
-disp('   ─────────────────────────────────');
-disp('   Expected: peaks near 50, 120, 150 Hz');
+fft_filtered = (sign_filtered)
