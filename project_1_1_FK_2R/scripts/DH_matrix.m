@@ -19,3 +19,24 @@ DH = @(theta, d, a, alpha) ...
     0,          sin(alpha),              cos(alpha),                d;
     0,           0,                         0,                      1       ];
 
+T01 = DH(theta1, 0, L1, 0)
+disp('_T01_')
+disp(T01)
+
+T12 = DH(theta2, 0, L2, 0)
+disp('_T02_')
+disp(T02)
+
+T02 = T01*T12;
+disp('T02 RAW')
+disp(T02)
+
+% Simplify the result
+T02_simpl = simplify(T02);
+disp('T02 SIMPLIFIED')
+disp(T02_simpl)
+
+%% Extract end-effector position
+
+
+
