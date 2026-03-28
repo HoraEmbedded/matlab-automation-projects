@@ -1,24 +1,24 @@
-# 🤖 Project 1.1 — Forward Kinematics of a 2R Planar Robot
+# Project 1.1 — Forward Kinematics of a 2R Planar Robot
 
 <div align="center">
 
-![MATLAB](https://img.shields.io/badge/MATLAB-R2021a%2B-orange?style=for-the-badge&logo=mathworks)
+![MATLAB](https://img.shields.io/badge/MATLAB-R2024b%2B-orange?style=for-the-badge&logo=mathworks)
 ![Toolbox](https://img.shields.io/badge/Robotics_System_Toolbox-required-blue?style=for-the-badge)
 ![Toolbox](https://img.shields.io/badge/Symbolic_Math_Toolbox-required-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Complete_✅-brightgreen?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete_-brightgreen?style=for-the-badge)
 ![Version](https://img.shields.io/badge/Version-v1.0-purple?style=for-the-badge)
 
 **Author:** HoraEmbedded  
 **Program:** Electronics & Automation Systems Engineering  
 **Phase:** 1 — Kinematics & Robot Modelling  
 **Estimated Duration:** 1 week  
-**Difficulty:** ⭐ Beginner Robotics
+**Difficulty:**  Beginner Robotics
 
 </div>
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Project Overview](#-project-overview)
 - [Learning Objectives](#-learning-objectives)
@@ -34,7 +34,7 @@
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 This project implements the **Forward Kinematics (FK)** of a **2R planar robot arm** — a robot with two rotational joints (shoulder + elbow) moving in a 2D plane. This is the foundational building block of all industrial robot programming.
 
@@ -52,19 +52,6 @@ INPUT                          OUTPUT
 
 ### The Robot Structure
 
-```
-     Y
-     ↑
-     │           ✦ ← End-Effector
-     │          /
-     │    L2   /  (Link 2 — "forearm")
-     │        /
-     │       ● ← Joint 2 (elbow)
-     │      /
-     │ L1  /  (Link 1 — "upper arm")
-     │    /
-     │   ● ← Joint 1 / Base (shoulder)
-     └──────────────────→ X
 
   θ1 = rotation angle of Joint 1
   θ2 = rotation angle of Joint 2
@@ -83,24 +70,24 @@ These equations are **not memorized** — they are **derived analytically** usin
 
 ---
 
-## 📚 Learning Objectives
+## Learning Objectives
 
 By completing this project, the following skills are demonstrated:
 
 | # | Objective | Status |
 |---|-----------|--------|
-| 1 | Establish DH reference frames for a 2R robot | ✅ |
-| 2 | Build DH parameter table (θ, d, a, α) | ✅ |
-| 3 | Compute T01, T12, T02 matrices symbolically | ✅ |
-| 4 | Implement numerical `fk_2R()` reusable function | ✅ |
-| 5 | Visualize the robot in 2D for any configuration | ✅ |
-| 6 | Animate joint sweeps to understand motion | ✅ |
-| 7 | Compute and visualize the full workspace map | ✅ |
-| 8 | Build interactive App Designer GUI with real-time control | ✅ |
+| 1 | Establish DH reference frames for a 2R robot | 
+| 2 | Build DH parameter table (θ, d, a, α) | 
+| 3 | Compute T01, T12, T02 matrices symbolically |
+| 4 | Implement numerical `fk_2R()` reusable function |
+| 5 | Visualize the robot in 2D for any configuration |
+| 6 | Animate joint sweeps to understand motion |
+| 7 | Compute and visualize the full workspace map |
+| 8 | Build interactive App Designer GUI with real-time control |
 
 ---
 
-## 📐 Theory — Denavit-Hartenberg Convention
+## Theory — Denavit-Hartenberg Convention
 
 ### What is DH?
 
@@ -175,21 +162,16 @@ T_total(2,4) = y    ← y coordinate of end-effector
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
-matlab-robotics-portfolio/
-│
-├── README.md                          ← This file
-├── .gitignore                         ← MATLAB gitignore
-│
+
 └── project_1_1_FK_2R/
     │
     ├── scripts/
     │   ├── build_DH_matrix.m          ← Symbolic DH derivation (step-by-step)
     │   ├── fk_2R.m                    ← Reusable FK function (numerical)
-    │   ├── visualize_2R.m             ← Static robot visualization
-    │   ├── animate_2R.m               ← Joint sweep animation
+    │   ├── visualize_2R.m             ← Static robot visualization + Joint sweep animation
     │   ├── workspace_2R.m             ← Full workspace map (360×360 grid)
     │   └── Robot2R_App.mlapp          ← Interactive App Designer GUI
     │
@@ -203,9 +185,9 @@ matlab-robotics-portfolio/
 
 ---
 
-## 📜 Scripts Description
+## Scripts Description
 
-### 1. `build_DH_matrix.m` — Symbolic DH Derivation
+### 1. `_DH_matrix.m` — Symbolic DH Derivation
 
 **Purpose:** Derives the FK equations analytically using MATLAB's Symbolic Math Toolbox.
 
@@ -217,14 +199,6 @@ matlab-robotics-portfolio/
 - Simplifies the result symbolically
 - Extracts and displays the x, y formulas
 - Verifies numerically with a known test case
-
-**Key output:**
-```matlab
-x = L1*cos(theta1) + L2*cos(theta1 + theta2)
-y = L1*sin(theta1) + L2*sin(theta1 + theta2)
-
-✅ TEST PASSED — x=1.5000, y=0.0000
-```
 
 ---
 
@@ -265,6 +239,7 @@ fprintf('End-effector: x=%.4f m, y=%.4f m\n', x, y);
 ### 3. `visualize_2R.m` — Static Robot Drawing
 
 **Purpose:** Draws the robot in 2D for any configuration.
+            Animates Joint 1 sweeping from 0° to 180° with a fixed θ2.
 
 **Features:**
 - Blue line = Link 1, Red line = Link 2
@@ -274,19 +249,7 @@ fprintf('End-effector: x=%.4f m, y=%.4f m\n', x, y);
 
 ---
 
-### 4. `animate_2R.m` — Joint Sweep Animation
-
-**Purpose:** Animates Joint 1 sweeping from 0° to 180° with a fixed θ2.
-
-**Key parameters to experiment with:**
-```matlab
-theta1_range = linspace(0, pi, 60);   % frames
-theta2_fixed = pi/4;                   % change this to see elbow up/down
-```
-
----
-
-### 5. `workspace_2R.m` — Workspace Map
+### 4. `workspace_2R.m` — Workspace Map
 
 **Purpose:** Computes and visualizes ALL positions the end-effector can reach.
 
@@ -300,7 +263,7 @@ theta2_fixed = pi/4;                   % change this to see elbow up/down
 
 ---
 
-### 6. `Robot2R_App.mlapp` — Interactive GUI Controller
+### 5. `Robot2R_App.mlapp` — Interactive GUI Controller
 
 **Purpose:** Real-time interactive robot controller with a graphical interface.
 
@@ -324,7 +287,7 @@ theta2_fixed = pi/4;                   % change this to see elbow up/down
 
 ---
 
-## ▶️ How to Run
+## How to Run
 
 ### Prerequisites
 
@@ -350,11 +313,9 @@ run('build_DH_matrix.m')
 % 2. Test the FK function directly
 [x, y] = fk_2R(pi/4, pi/4, 1.0, 0.6)
 
-% 3. Draw the robot in one configuration
+% 3. Draw the robot in one configuration and watch the animation
 run('visualize_2R.m')
 
-% 4. Watch the animation
-run('animate_2R.m')
 
 % 5. Generate workspace map
 run('workspace_2R.m')
@@ -367,13 +328,12 @@ open('Robot2R_App.mlapp')
 ### Recommended Order
 
 ```
-build_DH_matrix.m  →  fk_2R.m  →  visualize_2R.m
-        →  animate_2R.m  →  workspace_2R.m  →  Robot2R_App.mlapp
+DH_matrix.m  →  fk_2R.m  →  visualize_2R.m  →  workspace_2R.m  →  Robot2R_App.mlapp
 ```
 
 ---
 
-## 📊 Results & Outputs
+## Results & Outputs
 
 ### Transformation Matrices (symbolic)
 
@@ -391,25 +351,12 @@ T02 (simplified) =
 [           0,            0,  0,                             1  ]
 ```
 
-### Verification Test Results
 
-| Test Case | θ1 | θ2 | L1 | L2 | x (computed) | x (expected) | y (computed) | y (expected) | Result |
-|-----------|----|----|----|----|--------------|--------------|--------------|--------------|--------|
-| Flat right | 0° | 0° | 1.0 | 0.5 | 1.5000 | 1.5000 | 0.0000 | 0.0000 | ✅ PASS |
-| Standing up | 90° | 0° | 1.0 | 0.5 | 0.0000 | 0.0000 | 1.5000 | 1.5000 | ✅ PASS |
 
-### Workspace Analysis (L1=1.0m, L2=0.6m)
-
-```
-Outer radius (max reach) : 1.600 m
-Inner radius (min reach) : 0.400 m
-Total points computed    : 129,600
-Workspace shape          : Full annular ring (donut)
-```
 
 ---
 
-## 🧠 Key Concepts Learned
+## Key Concepts Learned
 
 ### 1. The DH Convention — Why it matters
 Every robot in the world (ABB, KUKA, Fanuc, Universal Robots) can be described with DH parameters. It is the **universal language of robot geometry**. Mastering it means being able to model any serial robot.
@@ -439,7 +386,7 @@ If L1 ≠ L2  → inner radius > 0 → there is a hole → annular ring workspac
 
 ---
 
-## 📖 Vocabulary Reference
+## Vocabulary Reference
 
 | 🇬🇧 English Term | 🇫🇷 French | Definition |
 |---|---|---|
@@ -460,7 +407,7 @@ If L1 ≠ L2  → inner radius > 0 → there is a hole → annular ring workspac
 
 ---
 
-## 🏭 Industrial Context
+## Industrial Context
 
 This project directly maps to real industrial applications:
 
@@ -477,7 +424,7 @@ This project directly maps to real industrial applications:
 
 ---
 
-## 🚀 Next Steps
+## Next Steps
 
 | Project | Topic | Builds On |
 |---------|-------|-----------|
@@ -488,7 +435,7 @@ This project directly maps to real industrial applications:
 
 ---
 
-## 📄 License
+## License
 
 This project is part of an academic robotics portfolio.  
 Free to use for educational and learning purposes.
@@ -497,7 +444,7 @@ Free to use for educational and learning purposes.
 
 <div align="center">
 
-*Built with 💜 as part of a structured 20-project robotics learning journey*  
+*Built with as part of a structured 20-project robotics learning journey*  
 *MATLAB + Robotics System Toolbox + Symbolic Math Toolbox + App Designer*
 
 **HoraEmbedded** — Electronics & Automation Systems Engineering
