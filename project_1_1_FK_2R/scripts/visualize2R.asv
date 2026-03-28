@@ -25,7 +25,7 @@ hold on; grid on; axis equal;
 % Draw Link 1
 plot([0, x_j2], [0, y_j2], 'b-', 'LineWidth', 4);
 
-% Draw Link 2
+% Draw Link 2: from Joint 2 to End-Effector
 plot([x_j2, x_end], [y_j2, y_end], 'r-', 'LineWidth', 4);
 
 % Draw joints as circles
