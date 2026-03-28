@@ -4,7 +4,6 @@
 
 robot = loadrobot('universalUR5', 'DataFormat', 'column');
 
-disp('✅ UR5 loaded from MATLAB built-in library!');
 showdetails(robot)
 
 config = homeConfiguration(robot);
