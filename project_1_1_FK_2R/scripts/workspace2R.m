@@ -4,23 +4,22 @@
 %% =========================================================
 clear; clc; close all;
 
-%% --- Robot Parameters ---
-L1 = 1.0;   % meters
-L2 = 0.2;   % meters
 
-%% --- Angle Ranges ---
-% Sweep both joints through their full range
-% linspace(start, end, N_points)
-theta1_range = linspace(0, 2*pi, 360);  % 0 to 360°, 360 samples
-theta2_range = linspace(0, 2*pi, 360);  % 0 to 360°, 360 samples
+L1 = 1.0;   
+L2 = 0.2;   
 
-%% --- Pre-allocate storage ---
-% We will store 360*360 = 129,600 (x,y) points
+% Angle Ranges
+
+theta1_range = linspace(0, 2*pi, 360);  
+theta2_range = linspace(0, 2*pi, 360);  
+
+%-Pre-allocate storage
+
 n_total = length(theta1_range) * length(theta2_range);
-x_all = zeros(1, n_total);  % pre-allocate for speed
-y_all = zeros(1, n_total);  % pre-allocate for speed
+x_all = zeros(1, n_total);  
+y_all = zeros(1, n_total);  
 
-%% --- Compute ALL configurations ---
+
 idx = 1;  % index counter
 
 for i = 1:length(theta1_range)
@@ -30,7 +29,7 @@ for i = 1:length(theta1_range)
         t1 = theta1_range(i);
         t2 = theta2_range(j);
 
-        % Compute FK (using our function!)
+        % Compute FK 
         [x, y] = fk_2R(t1, t2, L1, L2);
 
         % Store the result
@@ -64,7 +63,7 @@ plot(r_inner*cos(theta_circle), r_inner*sin(theta_circle), ...
      'g--', 'LineWidth', 2);   % inner boundary
 
 % Labels
-title(sprintf('Workspace — L1=%.1fm, L2=%.1fm', L1, L2), 'FontSize', 14);
+title(sprintf('Workspace - L1=%.1fm, L2=%.1fm', L1, L2), 'FontSize', 14);
 xlabel('X (meters)'); ylabel('Y (meters)');
 legend('Reachable points', 'Base', ...
        sprintf('Outer boundary (r=%.1f)', r_outer), ...
