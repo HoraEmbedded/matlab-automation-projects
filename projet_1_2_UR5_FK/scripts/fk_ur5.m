@@ -37,8 +37,8 @@ function result = fk_ur5(robot, joint_angles_deg)
 
     %% STEP 3: Compute the transformation matrix
     % getTransform = the FK engine
-    % "Where is tool0 relative to base?"
-    T = getTransform(robot, config, 'tool0', 'base');
+    % Using 'base_link' instead of 'base' to align with the 3D plot origin
+    T = getTransform(robot, config, 'tool0', 'base_link');
 
     %% STEP 4: Extract useful information from T
     % Remember: T = [R | p]
