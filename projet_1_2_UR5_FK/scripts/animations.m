@@ -61,7 +61,7 @@ for k = 1:N
     all_configs{k} = result.config;
 end
 
-disp('✅ Trajectory pre-computed! Starting animation...');
+disp('Trajectory pre-computed! Starting animation...');
 
 %% PART 3: Animate the robot
 
@@ -119,7 +119,7 @@ for k = 1:N
     pause(0.01);
 end
 
-disp('🎬 Animation complete!');
+disp(' Animation complete!');
 
 %% PART 4: Plot the end-effector trajectory in 3D (static summary)
 
