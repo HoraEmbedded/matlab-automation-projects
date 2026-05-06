@@ -33,7 +33,3 @@ y = tform(2,4);
 z = tform(3,4);
 
 fprintf('End-Effector Position -> X: %.3f m, Y: %.3f m, Z: %.3f m\n', x, y, z);
-
-
-!git config --global user.email "azonhoumonhoracia@gmail.com"
-  !git config --global user.name "HoraEmbeddded"
