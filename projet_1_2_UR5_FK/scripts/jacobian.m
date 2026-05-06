@@ -198,3 +198,10 @@ view(45, 20);
 xlabel('X (m)');
 ylabel('Y (m)');
 zlabel('Z (m)');
+
+
+ % Importation du robot à partir du fichier URDF
+robot = importrobot('ur5.urdf');
+
+% Affichage du robot pour vérifier l'importation
+show(robot);
