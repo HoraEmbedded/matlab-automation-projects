@@ -91,3 +91,15 @@ for i = 1:50:size(q,2) % Show robot every 50 steps for speed
     drawnow;
 end
 title('Animation of UR5 smooth movement');
+
+% 1. Define Start and End Poses (4x4 Matrices)
+T_start = getTransform(robot, q_start, 'tool0');
+T_end = T_start; 
+T_end(1,4) = T_end(1,4) + 0.2; % Move 20cm in X direction
+
+% 2. Create the Cartesian Trajectory
+% This generates 100 steps between the two matrices
+[T_path, vel, accel] = transformtraj(T_start, T_end, [0 5], t);
+
+% 3. Visualize the path
+plot3(squeeze(T_path(1,4,:)), squeeze(T_path(2,4,:)), squeeze(T_path(3,4,:)), 'r--', 'LineWidth', 2);
