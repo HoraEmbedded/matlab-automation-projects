@@ -92,14 +92,31 @@ for i = 1:50:size(q,2) % Show robot every 50 steps for speed
 end
 title('Animation of UR5 smooth movement');
 
-% 1. Define Start and End Poses (4x4 Matrices)
-T_start = getTransform(robot, q_start, 'tool0');
-T_end = T_start; 
-T_end(1,4) = T_end(1,4) + 0.2; % Move 20cm in X direction
+% 1. Get our starting matrix from the last joint position
+T_start = getTransform(robot, q_goal, 'tool0'); 
 
-% 2. Create the Cartesian Trajectory
-% This generates 100 steps between the two matrices
-[T_path, vel, accel] = transformtraj(T_start, T_end, [0 5], t);
+% 2. Define the goal matrix (20cm move in X)
+T_end = T_start;
+T_end(1,4) = T_end(1,4) + 0.2; 
+
+% 3. Create the path of 500 matrices
+t_vec = 0:0.01:5;
+[T_path, ~, ~] = transformtraj(T_start, T_end, [0 5], t_vec);
+
+ik = inverseKinematics('RigidBodyTree', robot);
+weights = [0.25 0.25 0.25 1 1 1]; % Focus more on position (1) than rotation (0.25)
+initial_guess = q_goal; % Start the search from our current position
+
+% Create an empty list to store the 500 translations
+q_path = zeros(6, numel(t_vec));
+
+% THE LOOP: Translating every matrix
+for i = 1:numel(t_vec)
+    % Find the 6 joint angles for the matrix at index 'i'
+    [config_sol, sol_info] = ik('tool0', T_path(:,:,i), weights, initial_guess);
+    q_path(:,i) = config_sol;
+    initial_guess = config_sol; % Use the result as the next guess for speed
+end
 
 % 3. Visualize the path
 plot3(squeeze(T_path(1,4,:)), squeeze(T_path(2,4,:)), squeeze(T_path(3,4,:)), 'r--', 'LineWidth', 2);
